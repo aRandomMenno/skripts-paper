@@ -1,0 +1,190 @@
+
+on block break:
+    set {blocksBroken::%player's uuid%} to {blocksBroken::%player's uuid%} + 1
+    if player has permission "sk.admin.build":
+        stop
+    else if event-block is beacon:
+        stop
+    else:
+        cancel event
+
+command /secret [<text>]:
+    permission: sk.admin.secret
+    trigger:
+        set {loc} to player's location
+        message "&b%{loc}%" to player
+
+on load:
+    set {loc} to beacon
+
+on block break of beacon or oak log or stone or deepslate or diamond block or lapis block or coal block or emerald block or gold block or iron block or redstone block or waxed copper block or amethyst block or obsidian or ancient debris or shroomlight or reinforced deepslate or crying obsidian:
+    set {_var} to random integer between 0 and 1001
+    if {_var} is 1 or 200 or 400 or 600 or 800 or 1000:
+        give player honeycomb named "&bHaste" with lore "&dRight click for haste 5 for 100 seconds."
+
+on right click holding honeycomb:
+    apply potion of haste 5 to player for 100 seconds
+    remove 1 honeycomb from player's inventory
+
+on block break of beacon:
+    clear drops
+    wait 1 tick
+    set {loc} to air
+    give 1 of beacon to player
+    wait 50 seconds
+    broadcast "&8[&aBC&8]&c Beacon regens in 10 seconds!"
+    wait 10 seconds
+    set block at location {loc} to beacon
+
+on block break of oak log:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to oak log
+    wait 2 ticks
+    set {_var} to random integer from 1 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of oak log to player
+
+on block break of stone:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to stone
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of cobblestone to player
+
+on block break of deepslate:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to deepslate
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of cobbled deepslate to player
+
+on block break of diamond block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to diamond block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of diamond block to player
+
+on block break of lapis block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to lapis block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of lapis block to player
+
+on block break of emerald block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to emerald block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of emerald block to player
+
+on block break of coal block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to coal block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of coal block to player
+
+on block break of gold block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to gold block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of gold block to player
+
+on block break of iron block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to iron block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of iron block to player
+
+on block break of redstone block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to redstone block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of redstone block to player
+                                                
+on block break of amethyst block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to amethyst block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of amethyst block to player
+
+on block break of waxed copper block:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to waxed copper block
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of copper block to player
+
+on block break of obsidian:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to obsidian
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of obsidian to player
+
+on block break of ancient debris:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to ancient debris
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of netherite scrap to player
+
+on block break of shroomlight:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to shroomlight
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of shroomlight to player
+
+on block break of reinforced deepslate:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to reinforced deepslate
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of reinforced deepslate to player
+
+on block break of crying obsidian:
+    player does not have permission "sk.admin.build"
+    clear drops
+    set event-block to crying obsidian
+    wait 2 ticks
+    set {_var} to random integer from 0 to level of fortune of the player's tool
+    set {_var} to {_var} + 1
+    give {_var} of crying obsidian to player

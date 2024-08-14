@@ -1,0 +1,112 @@
+
+on first join:
+    set {coins::%uuid of player%} to 25
+    set {deaths::%uuid of player%} to 0
+    set {kills::%uuid of player%} to 0
+    give player 1 of wooden pickaxe
+    give player 1 of wooden axe
+    give player 1 of wooden sword
+    give player 1 of leather helmet
+    give player 1 of leather chestplate
+    give player 1 of leather leggings
+    give player 1 of leather boots
+    give player 1 of unbreakable golden hoe named "&eClaim Tool"
+
+on death:
+    attacker is player
+    if victim is ender dragon or wither:
+        set {coins::%uuid of attacker%} to {coins::%uuid of attacker%} + 20
+    else if victim is warden:
+        set {coins::%uuid of attacker%} to {coins::%uuid of attacker%} + 60
+    else if victim is allay or axolotl or camel or dolphin or frog or goat or llama or panda or parrot or sniffer or tadpole or tropical fish or turtle or villager or wandering trader:
+        set {coins::%uuid of attacker%} to {coins::%uuid of attacker%} - 3
+        send "&cYou just killed an innocent creature, the server took 3 coins as tax!" to attacker
+    else:
+        set {coins::%uuid of attacker%} to {coins::%uuid of attacker%} + 0.25
+
+on tab complete of "/coins":
+    add "top" to {_players::*}
+    loop all players:
+        add loop-player to {_players::*}
+    set tab completions for position 1 to {_players::*}
+
+command /coins [<text>]:
+    cooldown: 20 seconds
+    cooldown message: &7[&eCoins&7] &cthis command has a cooldown to prevent server lag!
+    trigger:
+        if arg-1 is not set:
+            send "&7[&eCoins&7] &fYou have &6%{coins::%uuid of player%}% &fcoins." to player
+        else if arg-1 is "top":
+            loop {coins::*}:
+                add 1 to {_size}
+                if {_low.to.high.list::%loop-value%} is not set:
+                    set {_low.to.high.list::%loop-value%} to loop-index
+                else:
+                    set {_n} to 0
+                    loop {_size} times:
+                        set {_n} to {_n}+1
+                        {_low.to.high.list::%loop-value-1%.%{_n}%} is not set
+                        set {_low.to.high.list::%loop-value-1%.%{_n}%} to loop-index
+                        stop loop
+            wait 1 tick
+            set {_n} to size of {_low.to.high.list::*}
+            loop {_low.to.high.list::*}:
+                set {_high.to.low.list::%{_n}%} to loop-value
+                set {_n} to {_n}-1
+            wait 1 tick
+            message "&f=------------[ &6Coins &nTop 10 &r&f]------------="
+            loop {_high.to.low.list::*}:
+                add 1 to {_result}
+                set {_player} to (loop-value parsed as offline player)
+                send "&3%{_result}%. &b%{_player}%&e has %{coins::%loop-value%}% coins."
+                if {_result} is 10:
+                    stop
+        else:
+            send "&7[&eCoins&7] &f%arg-1% has &6%{coins::%uuid of arg-1 parsed as offline player%}% &fcoins" to player
+
+command /coinsset <offline player> <integer>:
+    permission: sk.admin.coins.set
+    trigger:
+        arg-1 is set
+        arg-2 is set
+        set {coins::%uuid of arg-1%} to arg-2
+        send "&eset coins of &6%arg-1% &eto &6%arg-2%"
+
+command /deathsset <offline player> <integer>:
+    permission: sk.admin.deaths.set
+    trigger:
+        arg-1 is set
+        arg-2 is set
+        set {deaths::%uuid of arg-1%} to arg-2
+        send "&eset deaths of &6%arg-1% &eto &6%arg-2%"
+
+command /killsset <offline player> <integer>:
+    permission: sk.admin.kills.set
+    trigger:
+        arg-1 is set
+        arg-2 is set
+        set {kills::%uuid of arg-1%} to arg-2
+        send "&eset kills of &6%arg-1% &eto &6%arg-2%"
+
+# command /givecoins <player>:
+#     trigger:
+#         arg-1 is set
+#         if {coins::%uuid of player%} < 100:
+#             send "&7[&eCoins&7] &cYou need atleast &a100 coins &cto withdraw your funds!" to player
+#         else:
+#             set {_num} to isNaN(arg-1)
+#             if {_num} is true:
+#                 send "&7[&eCoins&7] &cYou need to specify a number!" to player
+#             else:
+#                 if {coins::%uuid of player%} < arg-1:
+#                     send "&7[&eCoins&7] &cYou do not have enough funds to withdraw that amount you have &a%{coins::%uuid of player%}% coins&c!" to player
+#                 else:
+#                     set {coins::%uuid of player%} to {coins::%uuid of player%} - arg-1
+
+# on tab complete of "/withdraw":
+#     add "100" to {_values::*}
+#     add "500" to {_values::*}
+#     add "1000" to {_values::*}
+#     add "5000" to {_values::*}
+#     add "10000" to {_values::*}
+#     set tab completions for position 1 to {_values::*}

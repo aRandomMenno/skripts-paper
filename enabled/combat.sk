@@ -1,0 +1,44 @@
+
+options:
+    timer: 10
+    prefix: &7[&eAntBox&7]&f
+
+on damage of player:
+    attacker is player
+    attacker does not have permission "sk.admin.combat.bypass"
+    set {combat::%uuid of victim%} to true
+    set {combat::%uuid of attacker%} to true
+    set {combatTimer::%uuid of attacker%} to {@timer}
+    set {combatTimer::%uuid of victim%} to {@timer}
+    set {combatmsg::%uuid of victim%} to true
+    set {combatmsg::%uuid of attacker%} to true
+
+# on death of player:
+#     attacker is player
+#     set {_weapon} to name of attacker's tool
+#     set death message to "&7[&c⚔&7] &f%attacker% &cused &r%{_weapon}% &cto kill &f%victim%&c."
+
+on command:
+    if player has permission "sk.admin.combat.bypass":
+        stop
+    if {combat::%uuid of player%} is true:
+        cancel event
+        send "{@prefix} &cYou can't run cmds in combat!"
+
+every 1 second:
+    loop all players:
+        if {combat::%uuid of loop-player%} is true:
+            send action bar "&cYou are in combat for %{combatTimer::%uuid of loop-player%}% more seconds" to loop-player
+
+every 1 second:
+    loop all players:
+        if {combatTimer::%uuid of loop-player%} is set:
+            subtract 1 from {combatTimer::%uuid of loop-player%}
+
+every 1 second:
+    loop all players:
+        if {combatTimer::%uuid of loop-player%} is less than 1:
+            set {combat::%uuid of loop-player%} to false
+            if {combatmsg::%uuid of loop-player%} is true:
+                send action bar "&aYou are now out of combat!" to loop-player
+                set {combatmsg::%uuid of loop-player%} to false

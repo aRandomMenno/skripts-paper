@@ -1,0 +1,22 @@
+
+# Options:
+#     Use Perm: sk.admin.invsee
+#     No Player Message: &cPlease specify a player!
+
+# command /inv <player>:
+#     aliases: /invsee
+#     description: View a player's inventory.
+#     permission: sk.admin.invsee
+#     permission message: &4You are not allowed to do that!
+#     trigger:
+#         if arg 1 is not set:
+#             send "{@No Player Message}" to player
+#         else:
+#             open the arg-1's inventory for the player
+
+# command /endersee <player>:
+#     description: View a player's enderchest
+#     permission: sk.admin.ec.others
+#     permission message: &4You are not allowed to do that!
+#     trigger:
+#         open the arg-1's enderchest for the player

@@ -1,0 +1,11 @@
+
+every 30 minutes:
+    broadcast "&7[&bHydrator&7] &aRemeber to drink enough water!"
+
+every 9 minutes:
+   broadcast "&7[&3ClearLag&7] Clearing items in 1 minute."
+   wait 55 seconds
+   broadcast "&7[&3ClearLag&7] Clearing items in 5 seconds."
+   wait 5 seconds
+   console command "kill @e[type=item]"
+   broadcast "&7[&3ClearLag&7] Cleared all dropped items."

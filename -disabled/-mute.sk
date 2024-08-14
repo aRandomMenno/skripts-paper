@@ -1,0 +1,33 @@
+
+command /mute [<player>]:
+    permission message: &4You are not allowed to do that!
+    permission: sk.admin.mute
+    trigger:
+        if arg-1 is "all":
+            set {muteChatGlobal} to true
+            broadcast "&7[&b⚠&] &3Chat has been muted globally!"
+        else:
+            set {muted::%arg-1's uuid%} to true
+            message "&7[&b⚠&] &3%arg-1% has been muted." to player
+            message "&7[&b⚠&] You have been muted!" to arg-1
+
+command /unmute [<player>]:
+    permission message: &4You are not allowed to do that!
+    permission: sk.admin.unmute
+    trigger:
+        if arg-1 is "all":
+            set {muteChatGlobal} to false
+            broadcast "&7[&b⚠&] &3Chat has been unmuted globally!"
+        else:
+            set {muted::%arg-1's uuid%} to false
+            message "&7[&b⚠&] &3%arg-1% has been unmuted." to player
+            message "&7[&b⚠&] You have been unmuted!" to arg-1
+
+on chat:
+    player does not have permission "sk.admin.chat"
+    if {muted::%player's uuid%} is true:
+        send "&7[&b⚠&] &cYou are muted!" to player
+        cancel event
+    else if {muteChatGlobal} is true:
+        send "&7[&b⚠&] &cChat is mute globally!" to player
+        cancel event

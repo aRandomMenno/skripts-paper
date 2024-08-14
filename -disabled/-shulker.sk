@@ -1,0 +1,6 @@
+
+on rightclick:
+    if player is holding any shulker box:
+        cancel event
+        wait 1 tick
+        open event-item's inventory to player

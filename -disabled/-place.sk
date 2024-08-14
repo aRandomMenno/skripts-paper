@@ -1,0 +1,6 @@
+
+on block place:
+    if player has permission "sk.admin.build":
+        stop
+    else:
+        cancel event

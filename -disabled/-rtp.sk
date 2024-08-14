@@ -1,0 +1,10 @@
+
+command /rtp:
+    cooldown: 10 minutes
+    cooldown message: &7[&3RTP&7] &cYou can only rtp every 10 minutes!
+    permission: sk.rtp
+    permission message: &4You are not allowed to do that!
+    trigger:
+        set {_x} to round(random number between -5000 and 5000)
+        set {_z} to round(random number between -5000 and 5000)
+        teleport player to highest solid block at location({_x}, 0, {_z})

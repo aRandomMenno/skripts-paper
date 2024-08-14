@@ -1,0 +1,24 @@
+
+options:
+	Client: <##7afc00>
+	General: <##f97603>
+	Chat: <##03a3f9>
+
+command /help:
+    trigger:
+        set {_info} to a new chest inventory with 3 rows named "<##f97603>Information"
+        set slot 11 of {_info} to knowledge book named "{@Client}&lGeneral Information" with Lore "", "{@Client}⏺ &fThis is a survival server.", "{@Client}⏺ &fHOWEVER:", "{@Client}⏺ &fIf you die you lose 5 coins,", "{@Client}⏺ &fbut if you kill a player you gain 10 of their coins", "{@Client}⏺ &fIf you ever have 0 coins or less, you will be banned!", "{@Client}⏺ &fWorldborder is 5000x5000" and "{@Client}⏺ &fKeep inventory is &coff"
+        set slot 15 of {_info} to knowledge book named "{@General}&lUsefull commands" with Lore "", "{@General}⏺ &f/spawn (to return to spawn)", "{@General}⏺ &f/rtp (to random teleport within the worldborder)", "{@General}⏺ &f/team (create | home | invite | chat)", "{@General}⏺ &f/help & /rules", "{@General}⏺ &fwith /claim, /trust, etc.", "{@General}⏺ &f/shop [<page number>]", "{@General}⏺ &f/coins <any player> (to view their coins!)" and "{@General}⏺ &fAnd more!"
+        open {_info} to player
+
+command /rules:
+    trigger:
+        set {_rules} to a new chest inventory with 3 rows named "<##7afc00>Rules"
+        set slot 10 of {_rules} to knowledge book named "{@Client}&lCLIENT RULES" with Lore "", "{@Client}⏺ &fNo Hacked Clients", "{@Client}⏺ &fNo Movement Mods", "{@Client}⏺ &fNo Inventory Mods", "{@Client}⏺ &fNo Freecam", "{@Client}⏺ &fNo Auto Place" and "{@Client}⏺ &fNo Harmful Macros or Scripts"
+        set slot 13 of {_rules} to knowledge book named "{@General}&lGENERAL RULES" with Lore "", "{@General}⏺ &fNo Abusing Unintentional Bugs", "{@General}⏺ &fNo Attempted Duplicating", "{@General}⏺ &fNo Duplicating Items", "{@General}⏺ &fNo Impersonation of Staff", "{@General}⏺ &fNo Punishment Evasion", "{@General}⏺ &fNo Lying to Staff Members", "{@General}⏺ &fNo Doxing, Swatting, or DDosing", "{@General}⏺ &fReport All Bugs, Glitches, and Cheaters" and "  &fwith /report <player> <reason>"
+        set slot 16 of {_rules} to knowledge book named "{@Chat}&lCHAT RULES" with Lore "", "{@Chat}⏺ &fNo Spamming & Rioting", "{@Chat}⏺ &fNo Harassing & Abusing Others", "{@Chat}⏺ &fNo Sharing Others Information", "{@Chat}⏺ &fNo Advertising or Promotion", "{@Chat}⏺ &fNo Racism, Discrimination or Hate Speech" and "{@Chat}⏺ &fNo Death Threats & Suicide Encouragement"
+        open {_rules} to player
+
+on inventory click:
+    if name of player's current inventory is "<##7afc00>Rules" or "<##f97603>Information":
+        cancel event

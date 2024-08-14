@@ -1,0 +1,24 @@
+
+# on block break:
+#     player does not have permission "sk.admin.build"
+#     x coord of event-block > -10
+#     x coord of event-block < 10
+#     z coord of event-block > -10 
+#     z coord of event-block < 10
+#     y coord of event-block > 100 
+#     send "&7[&eskWG&7] &cYou can not break blocks in this area!" to player
+#     cancel event
+
+# on block place:
+#     player does not have permission "sk.admin.build"
+#     x coord of event-block > -10
+#     x coord of event-block < 10
+#     z coord of event-block > -10 
+#     z coord of event-block < 10
+#     y coord of event-block > 100 
+#     send "&7[&eskWG&7] &cYou can not place blocks in this area!" to player
+#     cancel event
+
+# on consume:
+#     player has permission "sk.admin.food.infinite"
+    

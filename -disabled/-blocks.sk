@@ -1,0 +1,4 @@
+
+on sign change:
+    player does not have permission "sk.admin.signs"
+    cancel event

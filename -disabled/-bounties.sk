@@ -1,0 +1,276 @@
+on tab complete of "/bounty" and "/bounties":
+	set tab completions for position 2 to ""
+	loop all players:
+		add loop-player to {_players::*}
+		set tab completions for position 1 to {_players::*}
+	if tab arg-1 is "add":
+		set tab completions for position 3 to "(amount)"
+		loop all players:
+			add loop-player to {_players::*}
+			set tab completions for position 2 to {_players::*}
+
+command /bounty [<text>] [<offline player>] [<text>]:
+	aliases: /bounties
+	trigger:
+		if arg-1 is "add":
+			if arg-3 is set:
+				set {_amount} to getAmount(arg-3)
+				if {_amount} is set:
+					if {_amount} >= 1:
+						if player's balance >= {_amount}:
+							if {players::*} contains "%arg-2%":
+								confirmationpurchase(arg-2, player, arg-3)
+							else:
+								send "&cThat player does not exist."
+								send action bar "&cThat player does not exist." to player
+								play sound "minecraft:entity.villager.no" to player
+						else:
+							send "&cYou do not have enough money."
+							send action bar "&cYou do not have enough money." to player
+							play sound "minecraft:entity.villager.no" to player
+					else:
+						newpage(player, 1, 0, 46, 1)
+				else:
+					newpage(player, 1, 0, 46, 1)
+			else:
+				newpage(player, 1, 0, 46, 1)
+		else:
+			if arg-1 is set:
+				if {bounty::list::*} contains arg-1:
+					set {_p} to arg-1 parsed as offline player
+					set {_checkbounty} to ("%{bounty::%uuid of {_p}%}%" parsed as number)
+					send "<##37BFF8>%arg-1% <##A7A7A8>has a bounty of <##7AFB00>$%formatNum({_checkbounty})%"
+					send action bar "<##37BFF8>%arg-1% <##A7A7A8>has a bounty of <##7AFB00>$%formatNum({_checkbounty})%" to player
+				else:
+					send "&cPlayer has no bounty on him."
+					send action bar "&cPlayer has no bounty on him." to player
+					play sound "minecraft:entity.villager.no" to player
+			else:
+				newpage(player, 1, 0, 46, 1)
+
+function confirmationpurchase(r: offlineplayer, p: offlineplayer, aprice: text):
+	set {_price} to unformat({_aprice})
+	set metadata tag "player" of {_p} to "%{_r}%"
+	set metadata tag "price" of {_p} to "%{_price}%"
+	set metadata tag "confirm-bounty" of {_p} to chest inventory with 3 rows named "ᴄᴏɴꜰɪʀᴍ ʙᴏᴜɴᴛʏ"
+	set slot 11 of metadata tag "confirm-bounty" of {_p} to red stained glass pane named "<##FC0000>ᴄᴀɴᴄᴇʟ" with lore "&7Click to cancel the bounty adding!"
+	set slot 13 of metadata tag "confirm-bounty" of {_p} to skull of {_r} named "<##00F986>%{_r}%" with lore "&fYou're going to set <##00F986>$%formatNum({_price})%"
+	set slot 15 of metadata tag "confirm-bounty" of {_p} to lime stained glass pane named "<##00FC00>ᴄᴏɴꜰɪʀᴍ" with lore "&7Click to confirm to add $%formatNum({_price})% bounty!"
+	open (metadata tag "confirm-bounty" of {_p}) to {_p}
+
+on inventory click:
+	if event-inventory = (metadata tag "confirm-bounty" of player):
+		cancel event
+		if index of clicked slot is 15:
+			set {_plr} to (metadata tag "player" of player) parsed as offlineplayer
+			set {_amount} to (metadata tag "price" of player) parsed as number
+			send "<##A8A8A8>You set a <##7AFB00>$%formatNum({_amount})% <##A8A8A8>bounty on <##37BFF8>%{_plr}%"
+			send action bar "<##A8A8A8>You set a <##7AFB00>$%formatNum({_amount})% <##A8A8A8>bounty on <##37BFF8>%{_plr}%" to player
+			close player's inventory
+			remove {_amount} from player's balance
+			add {_amount} to {bounty::%uuid of {_plr}%}
+			if {bounty::list::*} does not contain {_plr}:
+				set {bounty::timeset::%{_plr}%} to ceil(unix timestamp of now)
+			add {_plr} to {bounty::list::*} if {bounty::list::*} does not contain {_plr}
+			play sound "block.dispenser.fail" to player
+		if index of clicked slot is 11:
+			close player's inventory
+			play sound "block.dispenser.fail" to player
+			
+on death of player:
+	if attacker is a player: 
+		if {bounty::list::*} contains victim:
+			set {_bounty} to ("%{bounty::%uuid of victim%}%" parsed as number)
+			add {_bounty} to attacker's balance
+			remove victim from {bounty::list::*}
+			delete {bounty::%uuid of victim%}
+			wait 2 ticks
+			send "<##7AFB00>You received a bounty of $%formatNum({_bounty})% for killing %victim%" to attacker
+
+on inventory click:
+	if event-inventory = (metadata tag "bounty" of player):
+		cancel event
+		if (metadata tag "pagetype" of player) is 1:
+			set {_p} to player
+			set {_so} to (metadata tag "so" of player)
+			set {_eo} to (metadata tag "eo" of player)
+			set {_page} to (metadata tag "page" of player)
+			if index of clicked slot is 50:
+				if {_page}+1 > getmaxpage():
+					stop
+				else:
+					newpage({_p}, {_page}+1, {_so}+46, {_eo}+46, (metadata tag "pagetype" of player))
+			if index of clicked slot is 48:
+				if {_page} > 1:
+					newpage({_p}, {_page}-1, {_so}-46, {_eo}-46, (metadata tag "pagetype" of player))
+					#send "newpage({_p}, %{_page}-1%, %46*{_page}-1%, %46*{_page}-2%)"
+				else if {_page} = 1:
+					stop
+			if index of clicked slot is 49:
+				make player execute command "/bounties"
+			if index of clicked slot is 45:
+				close player's inventory
+				if {searchbounty::%player's uuid%} is not set:
+					send "<##A8A8A8>Type name to search for bounties"
+					send action bar "<##A8A8A8>Type name to search for bounties" to player
+					set {searchbounty::%player's uuid%} to true
+					wait 15 seconds
+					if {searchbounty::%player's uuid%} is set:
+						delete {searchbounty::%player's uuid%}
+					else:
+						stop
+				else:
+					close player's inventory
+					send "<##A8A8A8>Type name to search for bounties"
+					send action bar "<##A8A8A8>Type name to search for bounties" to player
+				
+			if index of clicked slot is 46:
+				play sound "block.dispenser.fail" to player
+				newpage({_p}, 1, 0, 46, 2)
+		else:
+			set {_p} to player
+			set {_so} to (metadata tag "so" of player)
+			set {_eo} to (metadata tag "eo" of player)
+			set {_page} to (metadata tag "page" of player)
+			if index of clicked slot is 50:
+				if {_page}+1 > getmaxpage():
+					stop
+				else:
+					newpage({_p}, {_page}+1, {_so}+46, {_eo}+46, (metadata tag "pagetype" of player))
+			if index of clicked slot is 48:
+				if {_page} > 1:
+					newpage({_p}, {_page}-1, {_so}-46, {_eo}-46, (metadata tag "pagetype" of player))
+					#send "newpage({_p}, %{_page}-1%, %46*{_page}-1%, %46*{_page}-2%)"
+				else if {_page} = 1:
+					stop
+			if index of clicked slot is 49:
+				make player execute command "/bounties"
+			if index of clicked slot is 45:
+				close player's inventory
+				if {searchbounty::%player's uuid%} is not set:
+					send "<##A8A8A8>Type name to search for bounties"
+					send action bar "<##A8A8A8>Type name to search for bounties" to player
+					set {searchbounty::%player's uuid%} to true
+					wait 15 seconds
+					if {searchbounty::%player's uuid%} is set:
+						delete {searchbounty::%player's uuid%}
+					else:
+						stop
+				else:
+					close player's inventory
+					send "<##A8A8A8>Type name to search for bounties"
+					send action bar "<##A8A8A8>Type name to search for bounties" to player
+			if index of clicked slot is 46:
+				play sound "block.dispenser.fail" to player
+				newpage({_p}, 1, 0, 46, 1)
+
+function newpage(p: player, page: number, startorder: number, endorder: number, pagetype: number):
+	if {_pagetype} is 1:
+		set metadata tag "page" of {_p} to {_page}
+		set metadata tag "so" of {_p} to {_startorder}
+		set metadata tag "eo" of {_p} to {_endorder}
+		set metadata tag "bounty" of {_p} to chest inventory with 6 rows named "ʙᴏᴜɴᴛɪᴇꜱ (Page %{_page}%/%getmaxpage() ? 1%)"
+		set metadata tag "pagetype" of {_p} to {_pagetype}
+		wait 2 ticks
+		set {_sorted::*} to sort((indices of {bounty::*}, {bounty::*}))
+		loop {_sorted::*}:
+			set {_id} to loop-index parsed as number
+			if {_id} > {_startorder}:
+				if {_id} > {_endorder}:
+					exit loop
+				else:
+					if "%{_plr}%" is "list":
+						remove 1 from {_a}
+					set {_plr} to loop-value
+					set {_player} to {_plr} parsed as offlineplayer
+					set {_u} to loop-value
+					set slot {_a} -1 of metadata tag "bounty" of {_p} to skull of {_player} named "<##00F986>%{_player}%" with lore "&fBounty: &7$%formatNum({bounty::%{_u}%})%"#%nl%&bDEBUG %difference between ceil(unix timestamp of now) and {bounty::timeset::%{_player}%}%"
+					add 1 to {_a}
+		set slot 49 of metadata tag "bounty" of {_p} to skeleton skull named "<##00F986>ʙᴏᴜɴᴛɪᴇꜱ" with lore "&fClick to refresh", and "", and "&7Set a bounty using this:" and "&7&o/bounty add (player) (amount)"
+		set slot 50 of metadata tag "bounty" of {_p} to arrow named "<##00F986>ɴᴇxᴛ" with lore "&fClick to go to the next page"
+		set slot 48 of metadata tag "bounty" of {_p} to arrow named "<##00F986>ʙᴀᴄᴋ" with lore "&fClick to go to the previous page"
+		set slot 45 of metadata tag "bounty" of {_p} to {item.oak_sign} named "<##00F986>ꜱᴇᴀʀᴄʜ" with lore "&fClick to search"
+		set slot 46 of metadata tag "bounty" of {_p} to hopper named "<##00F986>ꜱᴏʀᴛ" with lore "&fClick to sort (Amount)"
+		open (metadata tag "bounty" of {_p}) to {_p}
+	else if {_pagetype} is 2:
+		set metadata tag "page" of {_p} to {_page}
+		set metadata tag "so" of {_p} to {_startorder}
+		set metadata tag "eo" of {_p} to {_endorder}
+		set metadata tag "bounty" of {_p} to chest inventory with 6 rows named "ʙᴏᴜɴᴛɪᴇꜱ (Page %{_page}%/%getmaxpage() ? 1%)"
+		set metadata tag "pagetype" of {_p} to {_pagetype}
+		wait 2 ticks
+		set {_sorted::*} to sort((indices of {bounty::timeset::*}, {bounty::timeset::*}))
+		set {_a} to 1
+		loop {_sorted::*}:
+			set {_id} to loop-index parsed as number
+			if {_id} > {_startorder}:
+				if {_id} > {_endorder}:
+					exit loop
+				else:
+					set {_plr} to loop-value
+					set {_player} to {_plr} parsed as offlineplayer
+					set {_u} to loop-value
+					set slot {_a} -1 of metadata tag "bounty" of {_p} to skull of {_player} named "<##00F986>%{_player}%" with lore "&fBounty: &7$%formatNum({bounty::%{_player}'s uuid%})%"#%nl%&bDEBUG %difference between ceil(unix timestamp of now) and {bounty::timeset::%{_player}%}%"
+					add 1 to {_a}
+		set slot 49 of metadata tag "bounty" of {_p} to skeleton skull named "<##00F986>ʙᴏᴜɴᴛɪᴇꜱ" with lore "&fClick to refresh", and "", and "&7Set a bounty using this:" and "&7&o/bounty add (player) (amount)"
+		set slot 50 of metadata tag "bounty" of {_p} to arrow named "<##00F986>ɴᴇxᴛ" with lore "&fClick to go to the next page"
+		set slot 48 of metadata tag "bounty" of {_p} to arrow named "<##00F986>ʙᴀᴄᴋ" with lore "&fClick to go to the previous page"
+		set slot 45 of metadata tag "bounty" of {_p} to {item.oak_sign} named "<##00F986>ꜱᴇᴀʀᴄʜ" with lore "&fClick to search"
+		set slot 46 of metadata tag "bounty" of {_p} to hopper named "<##00F986>ꜱᴏʀᴛ" with lore "&fClick to sort (Recently Set)"
+		open (metadata tag "bounty" of {_p}) to {_p}
+
+function formatNum(n: number) :: string:
+	set {_l::*} to split "K,M,B,T,QN,QI,SX" at ","
+	set {_i} to min(floor(log({_n})/3), size of {_l::*})
+	return "%{_n}%" if {_i} <= 0
+	set {_i2} to 1000^{_i}
+	return "%{_n}/{_i2}%%{_l::%{_i}%}%"
+
+function format(n: number) :: text:
+	set {_data} to "Stp,54:Sxd,51:Qnd,48:Qt,45:Td,42:Do,39:Ud,36:Dc,33:Nn,30:Oc,27:Sp,24:Sx,21:Qn,18:Qd,15:T,12:B,9:M,6:K,3"
+	loop split {_data} at ":":
+		set {_s::*} to split loop-value at ","
+		{_n} >= 10 ^ {_s::2} parsed as number
+		return "%{_n} / 10 ^ {_s::2} parsed as number%%{_s::1}%"
+	return "%{_n}%"
+
+function getAmount(i: text) :: number:
+	set {_x} to unformat("%{_i}%")
+	return {_x}
+
+function unformat(t: text) :: number:
+	set {_v} to ""
+	set {_data} to "Stp,54:Sxd,51:Qnd,48:Qt,45:Td,42:Do,39:Ud,36:Dc,33:Nn,30:Oc,27:Sp,24:Sx,21:Qn,18:Qd,15:T,12:B,9:M,6:K,3"
+	loop split {_data} at ":":
+		set {_s::*} to split loop-value at ","
+		set {_d::%{_s::1}%} to {_s::2} parsed as number
+	loop split {_t} at "":
+		if {_d::%loop-value%} is set:
+			add {_d::%loop-value%} to {_n}
+		else:
+			set {_v} to "%{_v}%%loop-value%"
+	return ({_v} parsed as number) * 10^{_n}
+
+function sort(indices: strings, values: numbers, descending: boolean = true) :: strings:
+    loop {_indices::*}: 
+        set {_sort::%{_values::%loop-index%}%.%loop-index%} to loop-value
+    return (reversed {_sort::*}) if {_descending} is true, else {_sort::*}
+
+function getmaxpage() :: number:
+	set {_sorted::*} to sort((indices of {bounty::*}, {bounty::*}))
+	set {_lastindex} to 0
+	loop {_sorted::*}:
+		if loop-index parsed as number >= {_lastindex}:
+			add 1 to {_max}
+			add 46 to {_lastindex}
+	return {_max}
+
+on join:
+	if {searchbounty::%player's uuid%} is set:
+		delete {searchbounty::%player's uuid%}
+	if "%{players::*}%" does not contain "%player%":
+		add "%player%" to {players::*}
+		
+on quit:
+	if {searchbounty::%player's uuid%} is set:
+		delete {searchbounty::%player's uuid%}

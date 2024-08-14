@@ -1,0 +1,6 @@
+
+command /random1_20:
+    permission: sk.random
+    trigger:
+        set {_var} to random integer between 1 and 20
+        message "&7[&d&7] &3The number is %{_var}%" to player

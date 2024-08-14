@@ -1,0 +1,11 @@
+
+options:
+    SoundD: BLOCK_NOTE_BLOCK_PLING
+    SoundD-Volume: 1
+    SoundD-Pitch: 1
+
+command /discord:
+    aliases: /dc
+    trigger:
+        send "&6Join the &bDiscord <tooltip:&6Click to open the &bDiscord><link:https://discord.gg/RPUTvr8UMm>&ehere." to player
+        play sound "{@SoundD}" with volume {@SoundD-Volume} and pitch {@SoundD-Pitch}

@@ -1,0 +1,169 @@
+
+command /shop <string>:
+    permission: sk.shop
+    permission message: &4You are not allowed to do that!
+    trigger:
+        if arg-1 is "enchants":
+            set {_shop} to a new chest inventory with 6 rows named "&eEnchants Shop"
+            set slot 0 of {_shop} to knowledge book named "&aShop information" with lore "&bThe lore will show the price!" and "&bYou should hold the item to enchant!"
+            set slot 1 of {_shop} to black stained glass pane named " "
+            set slot 2 of {_shop} to black stained glass pane named " "
+            set slot 3 of {_shop} to black stained glass pane named " "
+            set slot 4 of {_shop} to black stained glass pane named " "
+            set slot 5 of {_shop} to black stained glass pane named " "
+            set slot 6 of {_shop} to black stained glass pane named " "
+            set slot 7 of {_shop} to black stained glass pane named " "
+            set slot 8 of {_shop} to black stained glass pane named " "
+            set slot 9 of {_shop} to book named "&aMiscellaneous enchants."
+            set slot 10 of {_shop} to diamond sword named "&aSword enchants."
+            set slot 11 of {_shop} to diamond helmet named "&aArmor enchants."
+            set slot 12 of {_shop} to diamond boots named "&aArmor enchants."
+            set slot 13 of {_shop} to black stained glass pane named " "
+            set slot 22 of {_shop} to black stained glass pane named " "
+            set slot 31 of {_shop} to black stained glass pane named " "
+            set slot 40 of {_shop} to black stained glass pane named " "
+            set slot 49 of {_shop} to black stained glass pane named " "
+            set slot 14 of {_shop} to diamond pickaxe named "&aTool enchants."
+            set slot 15 of {_shop} to crossbow named "&aCrossbow enchants."
+            set slot 16 of {_shop} to bow named "&aBow enchants."
+
+            # * Misc enchants
+            set slot 18 of {_shop} to enchanted book named "&aUnbreaking." with lore "&aCost: &62000 coins." and "&aLevel: &65."
+            set slot 27 of {_shop} to enchanted book named "&amendig." with lore "&aCost: &63000 coins." and "&aLevel: &61."
+
+            # * Sword enchants
+            set slot 19 of {_shop} to enchanted book named "&aSharpness." with lore "&aCost: &64500 coins." and "&aLevel: &67."
+            set slot 28 of {_shop} to enchanted book named "&aFire Aspect." with lore "&aCost: &62500 coins." and "&aLevel: &64."
+            set slot 37 of {_shop} to enchanted book named "&aLooting." with lore "&aCost: &61000 coins." and "&aLevel: &65."
+            set slot 46 of {_shop} to enchanted book named "&aKnockback." with lore "&aCost: &62000 coins." and "&aLevel: &65."
+
+            # * Armor enchants
+            set slot 20 of {_shop} to enchanted book named "&aProtection." with lore "&aCost: &64000 coins." and "&aLevel: &66."
+            set slot 29 of {_shop} to enchanted book named "&aAqua Infinity." with lore "&aCost: &61000 coins." and "&aLevel: &61."
+            set slot 38 of {_shop} to enchanted book named "&aRespiration." with lore "&aCost: &62000 coins." and "&aLevel: &65."
+            set slot 21 of {_shop} to enchanted book named "&aBlast Protection." with lore "&aCost: &65000 coins." and "&aLevel: &66."
+            set slot 39 of {_shop} to enchanted book named "&aFeather Falling." with lore "&aCost: &62000 coins." and "&aLevel: &66."
+            set slot 30 of {_shop} to enchanted book named "&aDepth Strider." with lore "&aCost: &62500 coins." and "&aLevel: &65."
+
+            # * Tool enchants
+            set slot 23 of {_shop} to enchanted book named "&aEfficiency." with lore "&aCost: &65500 coins." and "&aLevel: &67."
+            set slot 32 of {_shop} to enchanted book named "&aFortune." with lore "&aCost: &64000 coins." and "&aLevel: &65."
+            set slot 41 of {_shop} to enchanted book named "&aSilk Touch." with lore "&aCost: &6500 coins." and "&aLevel: &61."
+
+            # * Bow & Crossbow enchants
+            set slot 24 of {_shop} to enchanted book named "&aQuick Charge." with lore "&aCost: &66000 coins." and "&aLevel: &65."
+            set slot 33 of {_shop} to enchanted book named "&aPiercing." with lore "&aCost: &63000 coins." and "&aLevel: &66."
+            set slot 42 of {_shop} to enchanted book named "&aMultishot." with lore "&aCost: &61000 coins." and "&aLevel: &61."
+
+            set slot 25 of {_shop} to enchanted book named "&aPower." with lore "&aCost: &6600 coins." and "&aLevel: &67."
+            set slot 34 of {_shop} to enchanted book named "&aInfinity." with lore "&aCost: &62000 coins." and "&aLevel: &61."
+            set slot 43 of {_shop} to enchanted book named "&aPunch." with lore "&aCost: &63000 coins." and "&aLevel: &64."
+            set slot 52 of {_shop} to enchanted book named "&aFlame." with lore "&aCost: &61000 coins." and "&aLevel: &61."
+
+            # * Mace enchants
+            # set slot 24 of {_shop} to enchanted book named "&aDensity." with lore "&aCost: &66500 coins." and "&aLevel: &67."
+            # set slot 24 of {_shop} to enchanted book named "&aBreach." with lore "&aCost: &66500 coins." and "&aLevel: &66."
+            # set slot 24 of {_shop} to enchanted book named "&aWind burst." with lore "&aCost: &66500 coins." and "&aLevel: &65."
+
+            # * Open the shop to the player
+            open {_shop} to player
+
+        else if arg-1 is "special":
+            set {_shop} to a new chest inventory with 6 rows named "&eSpecial Shop"
+            set slot 0 of {_shop} to knowledge book named "&aShop information" with lore "&bThe lore will show the price!" and "&cYou should have space in your inventory!!!"
+            set slot 1 of {_shop} to black stained glass pane named " "
+            set slot 2 of {_shop} to black stained glass pane named " "
+            set slot 3 of {_shop} to black stained glass pane named " "
+            set slot 4 of {_shop} to black stained glass pane named " "
+            set slot 5 of {_shop} to black stained glass pane named " "
+            set slot 6 of {_shop} to black stained glass pane named " "
+            set slot 7 of {_shop} to black stained glass pane named " "
+            set slot 8 of {_shop} to black stained glass pane named " "
+
+            open {_shop} to player
+        
+        else if arg-1 is "sell":
+            set {_shop} to a new chest inventory with 6 rows named "&eSell Shop"
+            set slot 0 of {_shop} to knowledge book named "&cClick the items you want to sell."
+            set slot 1 of {_shop} to black stained glass pane named " "
+            set slot 2 of {_shop} to black stained glass pane named " "
+            set slot 3 of {_shop} to black stained glass pane named " "
+            set slot 4 of {_shop} to black stained glass pane named " "
+            set slot 5 of {_shop} to black stained glass pane named " "
+            set slot 6 of {_shop} to black stained glass pane named " "
+            set slot 7 of {_shop} to black stained glass pane named " "
+            set slot 8 of {_shop} to black stained glass pane named " "
+
+            open {_shop} to player
+
+function enchant(tool: item, enchant: enchant, cost: ) :: bool:
+
+on inventory click:
+    if name of current inventory of player is "&eEnchants Shop" or "&eSell Shop" or "&eSpecial Shop":
+        if clicked slot is between 0 and 99:
+            cancel event
+
+    if name of current inventory of player is "&eEnchants Shop":
+        if clicked slot is 18: #* Unbreaking
+            if player is not holding any tool or any armor or any sword or trident or shield or mace or crossbow or bow:
+                send "&7[&eShop&7] &cYou you can not enchant &d%tool of player% &cwith that!" to player
+                stop
+            else if {coins::%uuid of player%} < 2000:
+                send "&7[&eShop&7] &cYou dont have enough coins to buy that!" to player
+            else:
+                set {coins::%uuid of player%} to {coins::%uuid of player%} - 2000
+                enchant the player's tool with unbreaking 5
+                send "&7[&eShop&7] &aSuccesfully enchanted the item!"
+
+        else if clicked slot is 27: #* Mending
+            if player is not holding any tool or any armor or any sword or trident or shield or mace or crossbow or bow:
+                send "&7[&eShop&7] &cYou you can not enchant &d%tool of player% &cwith that!" to player
+                stop
+            else if {coins::%uuid of player%} < 3000:
+                send "&7[&eShop&7] &cYou dont have enough coins to buy that!" to player
+                stop
+            else:
+                set {coins::%uuid of player%} to {coins::%uuid of player%} - 3000
+                enchant the player's tool with mending 1
+                send "&7[&eShop&7] &aSuccesfully enchanted the item!"
+
+
+    else if name of current inventory of player is "&eSpecial Shop":
+        if clicked slot is 1:
+            send "Work In progress" to player
+            cancel event
+
+        # else if clicked slot is 9:
+        #     cancel event
+            # enchant the player's tool with sharpness 6
+            # if player has 1 netherite blocks and 1 dragon head:
+            #     remove 1 netherite block from player's inventory
+            #     remove 1 dragon head from player's inventory
+            #     give 1 diamond to player
+            #     send "&7[&aShop&7] &2Purchased: very expensive diamond." to player
+            #     cancel event
+            # else:
+            #     send "&7[&aShop&7] &cYou can not afford this!" to player
+            #     play sound "BLOCK_NOTE_BLOCK_PLING" with volume 2 and pitch 1
+            #     cancel event
+        # else if clicked slot is 10:
+        #     cancel event
+            # enchant the player's tool with sharpness 6
+            # if player has 1 netherite blocks and 1 dragon head:
+            #     remove 1 netherite block from player's inventory
+            #     remove 1 dragon head from player's inventory
+            #     give 1 diamond to player
+            #     send "&7[&aShop&7] &2Purchased: very expensive diamond." to player
+            #     cancel event
+            # else:
+            #     send "&7[&aShop&7] &cYou can not afford this!" to player
+            #     play sound "BLOCK_NOTE_BLOCK_PLING" with volume 2 and pitch 1
+            #     cancel event
+
+
+
+on tab complete of "/shop":
+    add "enchants" to {_values::*}
+    add "special" to {_values::*}
+    add "sell" to {_values::*}
+    set tab completions for position 1 to {_values::*}

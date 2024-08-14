@@ -1,0 +1,95 @@
+
+options:
+    prefix: &7[&eAntBox&7]&f
+
+command /setspawn:
+    permission: sk.admin.spawn.set
+    permission message: &7[&eAntBox&7]&c You are not allowed to do that!
+    description: Set spawn at your position.
+    trigger:
+        message "{@prefix} &6You have &cset spawn&6 at your position!"
+        set {spawn} to position of player
+
+command /spawn:
+    description: Teleport you to spawn.
+    trigger:
+        if {spawn} isn't set:
+            message "{@prefix}&c spawn is not set!" to player
+            stop
+        else:
+            if player has permission "sk.admin.spawn.timerbypass":
+                teleport player to {spawn}
+                send "{@prefix} &6Teleported to spawn!" to player
+            else:
+                send "{@prefix} &6Teleporting in 3 seconds don't move!" to player
+                set {_playerLoc} to position of player
+                wait 5 ticks
+                if distance between {_playerLoc} and player is 0:
+                    wait 5 ticks
+                    if distance between {_playerLoc} and player is 0:
+                        wait 5 ticks
+                        if distance between {_playerLoc} and player is 0:
+                            wait 5 ticks
+                            if distance between {_playerLoc} and player is 0:
+                                wait 5 ticks
+                                if distance between {_playerLoc} and player is 0:
+                                    wait 5 ticks
+                                    if distance between {_playerLoc} and player is 0:
+                                        wait 5 ticks
+                                        if distance between {_playerLoc} and player is 0:
+                                            wait 5 ticks
+                                            if distance between {_playerLoc} and player is 0:
+                                                wait 5 ticks
+                                                if distance between {_playerLoc} and player is 0:
+                                                    wait 5 ticks
+                                                    if distance between {_playerLoc} and player is 0:
+                                                        wait 5 ticks
+                                                        if distance between {_playerLoc} and player is 0:
+                                                            wait 5 ticks
+                                                            if distance between {_playerLoc} and player is 0:
+                                                                send "&6Teleported to spawn!" to player
+                                                                teleport player to {spawn}
+                                                            else:
+                                                                send "{@prefix} &cYou moved! canceling teleport!" to player
+                                                                stop
+                                                        else:
+                                                            send "{@prefix} &cYou moved! canceling teleport!" to player
+                                                            stop
+                                                    else:
+                                                        send "{@prefix} &cYou moved! canceling teleport!" to player
+                                                        stop
+                                                else:
+                                                    send "{@prefix} &cYou moved! canceling teleport!" to player
+                                                    stop
+                                            else:
+                                                send "{@prefix} &cYou moved! canceling teleport!" to player
+                                                stop
+                                        else:
+                                            send "{@prefix} &cYou moved! canceling teleport!" to player
+                                            stop
+                                    else:
+                                        send "{@prefix} &cYou moved! canceling teleport!" to player
+                                        stop
+                                else:
+                                    send "{@prefix} &cYou moved! canceling teleport!" to player
+                                    stop
+                            else:
+                                send "{@prefix} &cYou moved! canceling teleport!" to player
+                                stop
+                        else:
+                            send "{@prefix} &cYou moved! canceling teleport!" to player
+                            stop
+                    else:
+                        send "{@prefix} &cYou moved! canceling teleport!" to player
+                        stop
+                else:
+                    send "{@prefix} &cYou moved! canceling teleport!" to player
+                    stop
+
+command /delspawn:
+    permission: sk.admin.spawn.delete
+    permission message: &7[&eAntBox&7]&c You are not allowed to do that!
+    description: Unset spawn position.
+    trigger:
+        delete {spawn}
+        message "{@prefix} &6You have successfully unset &cspawn6!"

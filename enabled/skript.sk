@@ -1,0 +1,237 @@
+
+#@ ==------------------------------------------------------------------------------------== @#
+# @ Skript created by:                                                                     @ #
+# @ stackedunderflow (on discord)                                                          @ #
+# @ Cpotate.33 (on signal)                                                                 @ #
+# @ All rights to this person, if you didn't ask them you may not use this code.           @ #
+# @ But you probably wouldn't want to anyway. XD                                           @ #
+#@ ==------------------------------------------------------------------------------------== @#
+
+on load:
+    set {start_items::*} to stone pickaxe, stone shovel, chainmail boots, chainmail leggings, chainmail chestplate and chainmail helmet
+
+    set {materials_common::*} to gold ingot, iron ingot, coal and lapis lazuli # * 1 in 10
+    set {materials_epic::*} to diamond, emerald and netherite scrap # * 1 in 200
+    set {materials_mythic::*} to netherite upgrade smithing template and obsidian # * 1 in 1 600
+
+    set {items_common::*} to oak log, cherry log, carrot, moss block, cobbled deepslate, cobblestone and oak sapling # * 1 in 2
+    set {items_rare::*} to gravel, sand, cobweb, string, oak sapling, potato, kelp, sugar cane, bamboo, leather, water bucket and lava bucket # * 1 in 20
+    set {items_epic::*} to ender pearl, breeze rod, sponge, golden apple and experience bottle # * 1 in 100
+    set {items_legendary::*} to saddle, amethyst shard and redstone  # * 1 in 640
+    set {items_mythic::*} to totem, heavy core and enchanted golden apple # * 1 in 2048
+
+# * =----------------------------=
+# * End update:
+# * break endstone,
+# * shulker shell, elytra end items etc.
+# * =----------------------------=
+# * set {building::*} to tuff, granite, diorite and andesite # * idk
+
+# @ Dirt mining rewards.
+
+on block break of dirt or grass block:
+    add 1 to {dirt_mined::%uuid of player%}
+    give 1 xp to the player
+
+    set {_var} to random integer between 1 and 2
+    if {_var} is 2:
+        set {_var} to random element out of {items_common::*}
+        drop {_var} at event-location without velocity
+
+    set {_var} to random integer between 1 and 40
+    if {_var} is 10 or 30:
+        set {_var} to random element out of {items_rare::*}
+        drop {_var} at event-location without velocity
+
+    set {_var} to random integer between 1 and 200
+    if {_var} is 75 or 150:
+        set {_var} to random element out of {items_epic::*}
+        drop {_var} at event-location without velocity
+
+    set {_var} to random integer between 1 and 1280
+    if {_var} is 320 or 960:
+        set {_var} to random element out of {items_legendary::*}
+        drop {_var} at event-location without velocity
+
+    set {_var} to random integer between 1 and 4096
+    if {_var} is 1536 or 3072:
+        set {_var} to random element out of {items_mythic::*}
+        drop {_var} at event-location without velocity
+
+    set {_var} to random integer between 1 and 40
+    if {_var} is 15 or 30:
+        set {_var} to random element out of {materials_common::*}
+        drop {_var} at event-location without velocity
+
+    set {_var} to random integer between 1 and 400
+    if {_var} is 150 or 300:
+        set {_var} to random element out of {materials_epic::*}
+        drop {_var} at event-location without velocity
+
+    set {_var} to random integer between 1 and 3200
+    if {_var} is 800 or 2400:
+        set {_var} to random element out of {materials_mythic::*}
+        drop {_var} at event-location without velocity
+
+options:
+    prefix: &7[&eAntBox&7]&f
+    Client: <##7afc00>
+    General: <##f97603>
+    Chat: <##03a3f9>
+
+on join:
+    set join message to "{@prefix} &a&l+ &fWelcome back,&a %player%&f!"
+    if {cl::%uuid of player%} is true:
+        player does not have permission "sk.admin.combat"
+        set {cl::%uuid of player%} to false
+        kill player
+    set {combatmsg::%uuid of player%} to false
+    set {combat::%uuid of player%} to false
+
+on quit:
+    if {combat::%uuid of player%} is true:
+        set {cl::%uuid of player%} to true
+        broadcast "{@prefix} &c%player% has left during combat!"
+    set quit message to "{@prefix} &c&l- &fGoodbye,&e %player%&c!"
+
+    if {king} is uuid of player:
+        set {king} to "none"
+        set player's helmet slot to air
+        wait 1 tick
+        broadcast "{@prefix}&c %player%&f has quit with the crown, it has dropped at 0 130 0! "
+        drop 1 golden helmet named "&6crown" at {spawn} without velocity
+
+on first join:
+    add 1 to {joins}
+    set {gold::%uuid of player%} to 100
+    set {tokens::%uuid of player%} to 3
+    set {luck::%uuid of player%} to 1
+    set {kills::%uuid of player%} to 0
+    set {deaths::%uuid of player%} to 0
+    set {dirt_mined::%uuid of player%} to 0
+
+    set join message to "{@prefix} &a&l+ &a%player%&f just joined the server for the first time!"
+    broadcast "{@prefix} &6Unique joins: &2%{joins}%&6!"
+    send "{@prefix} Make sure to read &2/help&f!" to player
+
+    loop {start_items::*}:
+        give 1 of loop-value to player
+
+# @ /help.
+
+command /help:
+    trigger:
+        set {_gui} to a new chest inventory with 1 row named "&e&lɢᴇɴᴇʀᴀʟ ʜᴇʟᴘ ᴀɴᴅ ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ"
+        set slot 1 of {_gui} to knowledge book named "&c&lʀᴜʟᴇꜱ" with lore "&c/rules!"
+        set slot 4 of {_gui} to knowledge book named "&2&lɪɴꜰᴏʀᴍᴀᴛɪᴏɴ" with lore "&eEvery time you mine dirt there is a chance you get some items, use these to get among the top of the server!"
+        set slot 7 of {_gui} to knowledge book named "&3&lᴜᴘᴅᴀᴛᴇꜱ ᴀɴᴅ ᴄᴏᴍᴍᴀɴᴅꜱ" with lore "&6Notable commands:", "&f - &3/team (create | ally | invite | sethome | home)", "&f - &3/spawn", "&3Server release state:", "&f -&6 Beta &d0.2.1", "&c&lFixing and tweaking things." and "&2Also trying to add new things!"
+        open {_gui} to player
+
+command /rules:
+    trigger:
+        set {_gui} to a new chest inventory with 1 row named "&e&lᴅᴇᴅɪᴄᴀᴛᴇᴅ ʀᴜʟᴇꜱ."
+        set slot 1 of {_gui} to knowledge book named "{@Client}&lCLIENT RULES" with Lore "", "{@Client}⏺ &fNo Hacked Clients", "{@Client}⏺ &fNo Movement Mods", "{@Client}⏺ &fNo Inventory Mods", "{@Client}⏺ &fNo Freecam", "{@Client}⏺ &fNo Auto Place" and "{@Client}⏺ &fNo Harmful Macros or Scripts"
+        set slot 4 of {_gui} to knowledge book named "{@General}&lGENERAL RULES" with Lore "", "{@General}⏺ &fNo Abusing Unintentional Bugs", "{@General}⏺ &fNo Attempted Duplicating", "{@General}⏺ &fNo Duplicating Items", "{@General}⏺ &fNo Impersonation of Staff", "{@General}⏺ &fNo Punishment Evasion", "{@General}⏺ &fNo Lying to Staff Members", "{@General}⏺ &fNo Doxing, Swatting, or DDosing", "{@General}⏺ &fReport All Bugs, Glitches, and Cheaters" and "  &fwith /report <player> <reason>"
+        set slot 7 of {_gui} to knowledge book named "{@Chat}&lCHAT RULES" with Lore "", "{@Chat}⏺ &fNo Spamming & Rioting", "{@Chat}⏺ &fNo Harassing & Abusing Others", "{@Chat}⏺ &fNo Sharing Others Information", "{@Chat}⏺ &fNo Advertising or Promotion", "{@Chat}⏺ &fNo Racism, Discrimination or Hate Speech" and "{@Chat}⏺ &fNo Death Threats & Suicide Encouragement"
+        open {_gui} to player
+
+on inventory click:
+    if name of player's current inventory is "&e&lᴅᴇᴅɪᴄᴀᴛᴇᴅ ʀᴜʟᴇꜱ." or "&e&lɢᴇɴᴇʀᴀʟ ʜᴇʟᴘ ᴀɴᴅ ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ":
+        cancel event
+
+# * DIRT
+
+on pickup of golden helmet:
+    if event-player is player:
+        if name of event-item is "&6crown":
+            set {king} to uuid of event-player
+            send "%{king}%" to event-player
+
+            broadcast "{@prefix}&2 %player% has picked up the crown"
+
+            delete event-dropped item
+            cancel event
+            set {king} to uuid of player
+            apply potion of strength of tier 1 to player for 999999 seconds
+            apply potion of fire resistance of tier 1 to player for 999999 seconds
+            apply potion of slowness of tier 1 to player for 999999 seconds
+            apply potion of resistance 1 to player for 999999 seconds
+
+            set player's helmet slot to unbreakable golden helmet of binding curse and protection 6 named "&6crown"
+    else:
+        cancel event
+
+on death of player:
+    if attacker is player:
+        if victim's helmet slot is unbreakable golden helmet of binding curse and protection 6 named "&6crown":
+            set {king} to uuid of attacker
+            broadcast "{@prefix}&c %attacker%&f stole the crown from&c %victim%&f! "
+            set {i::%uuid of attacker%} to attacker's helmet slot
+            if attacker has enough space for {i::%uuid of attacker%}:
+                give attacker {i::%uuid of attacker%}
+            else:
+                send "{@prefix} You didn't have enough inventory space for your helmet, " to attacker
+                send "{@prefix} Retrieve it with /retrieve. " to attacker
+
+            set attacker's helmet slot to unbreakable golden helmet of binding curse and protection 6 named "&6crown"
+            set victim's helmet slot to air
+    else:
+        if victim's helmet slot is unbreakable golden helmet of binding curse and protection 6 named "&6crown":
+            set {king} to "none"
+            set victim's helmet slot to air
+            wait 1 tick
+            broadcast "{@prefix}&c %victim%&f has lost the crown and it has dropped at 0 130 0 "
+            drop 1 golden helmet named "&6crown" at {spawn} without velocity
+
+command /retrieve:
+    trigger:
+        if {i::%uuid of player%} is set:
+            give player {i::%uuid of player%}
+            clear {i::%uuid of player%}
+            send "{@prefix} Succesfully retrieved your helmet. " to player
+        else:
+            send "{@prefix} Nothing to retrieve. " to player
+
+# @ Make it a gui! done
+
+command /mineddirt:
+    aliases: /dirtmined, /dm
+    trigger:
+        set {_gui} to a new chest inventory with 1 row named "&7dirt"
+
+        loop {dirt_mined::*}:
+            add 1 to {_size}
+            if {_low.to.high.list::%loop-value%} is not set:
+                set {_low.to.high.list::%loop-value%} to loop-index
+            else:
+                set {_n} to 0
+                loop {_size} times:
+                    set {_n} to {_n}+1
+                    {_low.to.high.list::%loop-value-1%.%{_n}%} is not set
+                    set {_low.to.high.list::%loop-value-1%.%{_n}%} to loop-index
+                    stop loop
+        wait 1 tick
+        set {_n} to size of {_low.to.high.list::*}
+        loop {_low.to.high.list::*}:
+            set {_high.to.low.list::%{_n}%} to loop-value
+            set {_n} to {_n}-1
+        wait 1 tick
+        
+        set slot 0 of {_gui} to knowledge book named "&6The top 8 players, with most dirt mined."
+
+        loop {_high.to.low.list::*}:
+            set {_player} to (loop-value parsed as offline player)
+            add 1 to {_num}
+
+            set slot {_num} of {_gui} to gold ingot named "&f%{_num}%. &e%{_player}% with %{dirt_mined::%loop-value%}% dirt mined."
+            if {_result} is 8:
+                stop
+
+        open {_gui} to player
+
+command /ec:
+    aliases: /enderchest
+    permission: sk.player.ec
+    permission message: &4You are not allowed to do that!
+    trigger:
+        open player's enderchest to player
