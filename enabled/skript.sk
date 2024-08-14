@@ -136,7 +136,7 @@ command /rules:
         open {_gui} to player
 
 on inventory click:
-    if name of player's current inventory is "&e&lᴅᴇᴅɪᴄᴀᴛᴇᴅ ʀᴜʟᴇꜱ." or "&e&lɢᴇɴᴇʀᴀʟ ʜᴇʟᴘ ᴀɴᴅ ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ":
+    if name of player's current inventory is "&e&lᴅᴇᴅɪᴄᴀᴛᴇᴅ ʀᴜʟᴇꜱ." or "&e&lɢᴇɴᴇʀᴀʟ ʜᴇʟᴘ ᴀɴᴅ ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ" or "&7dirt":
         cancel event
 
 # * DIRT
@@ -145,10 +145,7 @@ on pickup of golden helmet:
     if event-player is player:
         if name of event-item is "&6crown":
             set {king} to uuid of event-player
-            send "%{king}%" to event-player
-
             broadcast "{@prefix}&2 %player% has picked up the crown"
-
             delete event-dropped item
             cancel event
             set {king} to uuid of player

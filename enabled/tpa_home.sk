@@ -1,90 +1,96 @@
 
+options:
+    prefix: &7[&eAntBox&7]&f
+
 command /tpa [<player>]:
     trigger:
         if arg-1 is set:
             if arg-1 is online:
                 if {tpalist::*} contains arg-1:
-                    send "&a%arg-1% &falready have a tpa request pending."
+                    send "{@prefix} &a%arg-1% &falready have a tpa request pending."
                 else:
                     if arg-1 is player:
                         send "&fThis is &ayou!"
                     else:
                         add arg-1 to {tpalist::*}
                         add player to {tpalist.%arg-1%::*}
-                        send "&bYou have a tpa request.%newline%&aType /tpaccept to accept it.%newline%&cType /tpdeny to deny it." to arg-1
-                        send "&fYou have sent a tpa request to &a%arg-1%." to player
+                        send "{@prefix} &bYou have a tpa request.%newline%&aType /tpaccept to accept it.%newline%&cType /tpdeny to deny it." to arg-1
+                        send "{@prefix} &fYou have sent a tpa request to &a%arg-1%." to player
             else:
-                send "&a%arg-1% &fis &coffline."
+                send "{@prefix} &a%arg-1% &fis &coffline."
         else:
-            send "&fPlease define a &aplayer."
+            send "{@prefix} &fPlease define a &aplayer."
 
 command /tpaccept:
     trigger:
         if {tpalist::*} contains player:
-            send "&aAccepting &ftpa request..."
+            send "{@prefix} &aAccepting &ftpa request..."
             remove player from {tpalist::*}
-            send "&fYou have accepted &a%player%&f's tpa request." to player
+            send "{@prefix} &fYou have accepted &a%player%&f's tpa request." to player
             wait 1 second
             teleport {tpalist.%player%::*} to player
         else:
-            send "&fYou have &cno &ftpa requests."
+            send "{@prefix} &fYou have &cno &ftpa requests."
 
 command /tpdeny:
     trigger:
         if {tpalist::*} contains player:
             send "&cDenying &ftpa request..."
             remove player from {tpalist::*} 
-            send "&fYou have &cdenied &a%player%&f's tpa request." to player
+            send "{@prefix} &fYou have &cdenied &a%player%&f's tpa request." to player
         else:
-            send "&fYou have &cno &ftpa requests."
+            send "{@prefix} &fYou have &cno &ftpa requests."
 
 command /sethome [<string>]:
-    permission: homes.set
+    permission: sk.player.sethome
     trigger:
         if arg is not set:
-            set {homes::%player's uuid%::home} to player's location
-            send "&aDefault home set to your location"
+            set {homes::%uuid of player%::home} to player's location
+            set {names_homes::%uuid of player%::home} to home
+            send "{@prefix} &aDefault home set to your location"
         else:
-            set {homes::%player's uuid%::%arg%} to player's location
-            send "&aHome &2&o%arg% &aset to your location"
+            set {homes::%uuid of player%::%arg%} to player's location
+            set {names_homes::%uuid of player%::%arg%} to arg
+            send "{@prefix} &aHome &2&o%arg% &aset to your location"
 
 command /homes:
-    permission: homes.list
+    permission: sk.player.listhome
     trigger:
-        if {homes::%player's uuid%::*} is set:
-            send "&aListing your homes"
-            loop {homes::%player's uuid%::*}:
+        if {homes::%uuid of player%::*} is set:
+            send "{@prefix} &aListing your homes"
+            loop {homes::%uuid of player%::*}:
                 send "&7- %loop-index%"
         else:
-            send "&cYou have no homes set!"
+            send "{@prefix} &cYou have no homes set!"
 
 command /delhome [<string>]:
-    permission: homes.delete
+    permission: sk.player.deletehome
     trigger:
         if arg is set:
-            if {homes::%player's uuid%::%arg%} is set:
-                delete {homes::%player's uuid%::%arg%}
-                send "&aHome &2&o%arg% &adeleted"
+            if {homes::%uuid of player%::%arg%} is set:
+                delete {homes::%uuid of player%::%arg%}
+                delete {names_homes::%uuid of player%::%arg%}
+                send "{@prefix} &aHome &2&o%arg% &adeleted"
             else:
-                send "&cThis home doesn't exist!"
+                send "{@prefix} &cThis home doesn't exist!"
         else:
-            send "&aWhich home would you like to delete? Use &2&o/homes &ato list your homes"
+            send "{@prefix} &aWhich home would you like to delete? Use &2&o/homes &ato list your homes"
 
 command /home [<string>]:
-    permission: homes.home
+    permission: sk.player.home
     trigger:
         if arg is set:
-            if {homes::%player's uuid%::%arg%} is set:
-                teleport player to {homes::%player's uuid%::%arg%}
-                send "&aTeleported to &2&o%arg%"
+            if {homes::%uuid of player%::%arg%} is set:
+                teleport player to {homes::%uuid of player%::%arg%}
+                send "{@prefix} &aTeleported to &2&o%arg%"
             else:
-                send "&cThis home doesn't exist!"
+                send "{@prefix} &cThis home doesn't exist!"
         else:
-            if {homes::%player's uuid%::home} is set:
-                teleport player to {homes::%player's uuid%::home}
-                send "&aTeleported to &2&ohome"
+            if {homes::%uuid of player%::home} is set:
+                teleport player to {homes::%uuid of player%::home}
+                send "{@prefix} &aTeleported to &2&ohome"
             else:
-                send "&cYou do not have a default home set"
+                send "{@prefix} &cYou do not have a default home set"
 
 on tab complete of "/home" and "/delhome":
-    set tab completions for position 1 to {homes::%player's uuid%::*}
+    set tab completions for position 1 to {names_homes::%uuid of player%::*}

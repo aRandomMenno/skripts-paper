@@ -5,13 +5,11 @@ options:
 command /setspawn:
     permission: sk.admin.spawn.set
     permission message: &7[&eAntBox&7]&c You are not allowed to do that!
-    description: Set spawn at your position.
     trigger:
         message "{@prefix} &6You have &cset spawn&6 at your position!"
         set {spawn} to position of player
 
 command /spawn:
-    description: Teleport you to spawn.
     trigger:
         if {spawn} isn't set:
             message "{@prefix}&c spawn is not set!" to player
@@ -89,7 +87,6 @@ command /spawn:
 command /delspawn:
     permission: sk.admin.spawn.delete
     permission message: &7[&eAntBox&7]&c You are not allowed to do that!
-    description: Unset spawn position.
     trigger:
         delete {spawn}
         message "{@prefix} &6You have successfully unset &cspawn6!"
