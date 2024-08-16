@@ -10,6 +10,7 @@ command /setspawn:
         set {spawn} to position of player
 
 command /spawn:
+    permission: sk.player.spawn
     trigger:
         if {spawn} isn't set:
             message "{@prefix}&c spawn is not set!" to player

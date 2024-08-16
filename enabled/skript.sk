@@ -3,12 +3,19 @@
 # @ Skript created by:                                                                     @ #
 # @ stackedunderflow (on discord)                                                          @ #
 # @ Cpotate.33 (on signal)                                                                 @ #
-# @ All rights to this person, if you didn't ask them you may not use this code.           @ #
+# @ The code is on github so yea use it if you want                                        @ #
 # @ But you probably wouldn't want to anyway. XD                                           @ #
 #@ ==------------------------------------------------------------------------------------== @#
 
+#f4ff00
+#ff2773
+#ff8927
+#27ff7b
+#6574ff
+#ff65dc
+
 on load:
-    set {start_items::*} to stone pickaxe, stone shovel, chainmail boots, chainmail leggings, chainmail chestplate and chainmail helmet
+    set {start_items::*} to unbreakable stone pickaxe, unbreakable stone shovel, chainmail boots, chainmail leggings, chainmail chestplate and chainmail helmet
 
     set {materials_common::*} to gold ingot, iron ingot, coal and lapis lazuli # * 1 in 10
     set {materials_epic::*} to diamond, emerald and netherite scrap # * 1 in 200
@@ -20,18 +27,23 @@ on load:
     set {items_legendary::*} to saddle, amethyst shard and redstone  # * 1 in 640
     set {items_mythic::*} to totem, heavy core and enchanted golden apple # * 1 in 2048
 
+    set {items_nether::*} to ghast tear, nether wart, blaze, crying obsidian and glowstone dust # * break in the nether netherrack.
+
 # * =----------------------------=
 # * End update:
-# * break endstone,
+# * break endstone, (in the end)
 # * shulker shell, elytra end items etc.
 # * =----------------------------=
-# * set {building::*} to tuff, granite, diorite and andesite # * idk
-
 # @ Dirt mining rewards.
 
 on block break of dirt or grass block:
     add 1 to {dirt_mined::%uuid of player%}
+    add 1 to {dirt_mined}
     give 1 xp to the player
+
+    set {_var} to random integer between 1 and 25
+    if {_var} is 1:
+        add 1 to {gold::%uuid of player%}
 
     set {_var} to random integer between 1 and 2
     if {_var} is 2:
@@ -95,7 +107,8 @@ on quit:
     set quit message to "{@prefix} &c&l- &fGoodbye,&e %player%&c!"
 
     if {king} is uuid of player:
-        set {king} to "none"
+        console command "attribute %player% minecraft:generic.max_health base set 20"
+        set {king} to "no one"
         set player's helmet slot to air
         wait 1 tick
         broadcast "{@prefix}&c %player%&f has quit with the crown, it has dropped at 0 130 0! "
@@ -111,7 +124,6 @@ on first join:
     set {dirt_mined::%uuid of player%} to 0
 
     set join message to "{@prefix} &a&l+ &a%player%&f just joined the server for the first time!"
-    broadcast "{@prefix} &6Unique joins: &2%{joins}%&6!"
     send "{@prefix} Make sure to read &2/help&f!" to player
 
     loop {start_items::*}:
@@ -149,18 +161,29 @@ on pickup of golden helmet:
             delete event-dropped item
             cancel event
             set {king} to uuid of player
-            apply potion of strength of tier 1 to player for 999999 seconds
-            apply potion of fire resistance of tier 1 to player for 999999 seconds
-            apply potion of slowness of tier 1 to player for 999999 seconds
-            apply potion of resistance 1 to player for 999999 seconds
-
+            console command "effect give %player% minecraft:haste infinite 1 true"
+            console command "effect give %player% minecraft:strength infinite 1 true"
+            console command "/effect give %player% minecraft:fire_resistance infinite 0 true"
+            console command "effect give %player% minecraft:slowness infinite 1 true"
+            console command "effect give %player% minecraft:resistance infinite 0 true"
             set player's helmet slot to unbreakable golden helmet of binding curse and protection 6 named "&6crown"
+            console command "attribute %player% minecraft:generic.max_health base set 40"
+
     else:
         cancel event
 
 on death of player:
     if attacker is player:
+        add 1 to {kills::%uuid of attacker%}
+        add 1 to {deaths::%uuid of victim%}
         if victim's helmet slot is unbreakable golden helmet of binding curse and protection 6 named "&6crown":
+            console command "attribute %attacker% minecraft:generic.max_health base set 40"
+            console command "attribute %victim% minecraft:generic.max_health base set 20"
+            console command "effect give %victim% minecraft:haste infinite 1 true"
+            console command "effect give %victim% minecraft:strength infinite 1 true"
+            console command "/effect give %victim% minecraft:fire_resistance infinite 0 true"
+            console command "effect give %victim% minecraft:slowness infinite 1 true"
+            console command "effect give %victim% minecraft:resistance infinite 0 true"
             set {king} to uuid of attacker
             broadcast "{@prefix}&c %attacker%&f stole the crown from&c %victim%&f! "
             set {i::%uuid of attacker%} to attacker's helmet slot
@@ -173,12 +196,16 @@ on death of player:
             set attacker's helmet slot to unbreakable golden helmet of binding curse and protection 6 named "&6crown"
             set victim's helmet slot to air
     else:
+        add 1 to {deaths::%uuid of victim%}
         if victim's helmet slot is unbreakable golden helmet of binding curse and protection 6 named "&6crown":
-            set {king} to "none"
+            console command "attribute %victim% minecraft:generic.max_health base set 20"
+            set {king} to "no one"
             set victim's helmet slot to air
             wait 1 tick
             broadcast "{@prefix}&c %victim%&f has lost the crown and it has dropped at 0 130 0 "
             drop 1 golden helmet named "&6crown" at {spawn} without velocity
+    
+
 
 command /retrieve:
     trigger:
@@ -232,3 +259,4 @@ command /ec:
     permission message: &4You are not allowed to do that!
     trigger:
         open player's enderchest to player
+ 

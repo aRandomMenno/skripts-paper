@@ -1,0 +1,29 @@
+
+command /forcescoreboardupdate <player>:
+    permission message: &4You are not allowed to do that!
+    permission: sk.debugging.updateScoreboardForcedManually
+    trigger:
+        update_scoreboard(arg-1)
+
+function update_scoreboard(p: player):
+    set {_p_uuid} to uuid of {_p} 
+
+    set title of {_p}'s scoreboard to "&e=---------[ &bkings &e]---------="
+    set line 14 of {_p}'s scoreboard to ""
+    set line 13 of {_p}'s scoreboard to "&3Who is &6king&3?"
+    set line 12 of {_p}'s scoreboard to "&e%({king} parsed as offline player)% &ais the king!"
+    set line 11 of {_p}'s scoreboard to ""
+    set line 10 of {_p}'s scoreboard to "&e=---------[ &bstats &e]---------="
+    set line 9 of {_p}'s scoreboard to ""
+    set line 8 of {_p}'s scoreboard to "&eYour gold: &6%{gold::%{_p_uuid}%}%"
+    set line 7 of {_p}'s scoreboard to "&eYour tokens: &6%{tokens::%{_p_uuid}%}%"
+    set line 6 of {_p}'s scoreboard to "&eYour kills: &6%{kills::%{_p_uuid}%}%"
+    set line 5 of {_p}'s scoreboard to "&eYour deaths: &6%{deaths::%{_p_uuid}%}%"
+    set line 4 of {_p}'s scoreboard to "&eMined dirt by you: &6%{dirt_mined::%{_p_uuid}%}%"
+    set line 3 of {_p}'s scoreboard to "&aServerwide mined dirt: &9%{dirt_mined}%"
+    set line 2 of {_p}'s scoreboard to "&aTotal Unique server joins: &2%{joins}%"
+    set line 1 of {_p}'s scoreboard to ""
+
+every 10 ticks:
+    loop all players:
+        update_scoreboard(loop-player)

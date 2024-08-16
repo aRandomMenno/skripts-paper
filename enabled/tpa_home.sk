@@ -3,6 +3,8 @@ options:
     prefix: &7[&eAntBox&7]&f
 
 command /tpa [<player>]:
+    permission: sk.player.tpa
+    permission message: &4You are not allowed to do that!
     trigger:
         if arg-1 is set:
             if arg-1 is online:
@@ -22,6 +24,8 @@ command /tpa [<player>]:
             send "{@prefix} &fPlease define a &aplayer."
 
 command /tpaccept:
+    permission: sk.player.tpaaccept
+    permission message: &4You are not allowed to do that!
     trigger:
         if {tpalist::*} contains player:
             send "{@prefix} &aAccepting &ftpa request..."
@@ -33,6 +37,8 @@ command /tpaccept:
             send "{@prefix} &fYou have &cno &ftpa requests."
 
 command /tpdeny:
+    permission: sk.player.tpadeny
+    permission message: &4You are not allowed to do that!
     trigger:
         if {tpalist::*} contains player:
             send "&cDenying &ftpa request..."
@@ -43,6 +49,7 @@ command /tpdeny:
 
 command /sethome [<string>]:
     permission: sk.player.sethome
+    permission message: &4You are not allowed to do that!
     trigger:
         if arg is not set:
             set {homes::%uuid of player%::home} to player's location
@@ -55,6 +62,7 @@ command /sethome [<string>]:
 
 command /homes:
     permission: sk.player.listhome
+    permission message: &4You are not allowed to do that!
     trigger:
         if {homes::%uuid of player%::*} is set:
             send "{@prefix} &aListing your homes"
@@ -65,6 +73,7 @@ command /homes:
 
 command /delhome [<string>]:
     permission: sk.player.deletehome
+    permission message: &4You are not allowed to do that!
     trigger:
         if arg is set:
             if {homes::%uuid of player%::%arg%} is set:
@@ -78,6 +87,7 @@ command /delhome [<string>]:
 
 command /home [<string>]:
     permission: sk.player.home
+    permission message: &4You are not allowed to do that!
     trigger:
         if arg is set:
             if {homes::%uuid of player%::%arg%} is set:
